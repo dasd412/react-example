@@ -1,0 +1,117 @@
+[컴포넌트]
+자바스크립트 함수처럼, 입력 -> 리액트 컴포넌트 -> 출력 형태로 되어 있음.
+다른 점은 입력이 props, 출력이 react element임.
+즉, props -> 리액트 컴포넌트 -> react element 
+
+컴포넌트와 엘리먼트는 클래스 - 객체 관계와 유사하다.
+
+[props]
+props는 React component의 속성.
+또는 컴포넌트에 전달할 다양한 정보를 담고 있는 자바스크립트 객체.
+
+[props의 특징]
+1.Read - only : 값을 변경할 수 없다. 따라서 props가 다른 element로 변경하려면, 아예 props가 다른 element를 "생성"시켜야 한다.
+
+    <자바 스크립트 pure 함수>
+    입력 값을 변경하지 않으며, 같은 입력값에 대해서는 항상 같은 출력값을 리턴하는 함수
+    ```
+    function sum(a,b){
+        return a+b;
+    }
+    ```
+2. 모든 리액트 컴포넌트는 그들의 props에 관해서는 pure 함수 같은 역할을 해야 한다.
+즉, 모든 리액트 컴포넌트는 props를 직접 바꿀 수 없고, 같은 props에 대해서는 항상 같은 결과(리액트 앨리먼트)를 보여줄 것!
+
+[props 사용법]
+
+```
+function App(props){
+    return (
+        <Profile 
+        name="tests"
+        introduction="hi"
+        viewCount={1500} # JSX에 JS 문법을 쓰려면 {}를 써야 한다.
+        />
+    )
+}
+```
+
+[props에 컴포넌트를 넣는 예제]
+
+```
+function App(props){
+    return (
+        <Layout
+            width={2560}
+            height={1440}
+            header={
+                <Header title="blog" />
+            }
+            footer={
+                <Footer />
+            }
+        />
+    );
+}
+```
+[컴포넌트 만들기]
+1.클래스형 컴포넌트 (알면 좋음)
+```
+class Welcome extends React.Component{
+    render(){
+        return <h1> hi, {props.name} </h1>; 
+    }
+}
+```
+
+2.함수형 컴포넌트 (요즘 대세)
+```
+function Welcome(props){
+    return <h1> hi, {props.name} </h1>;
+}
+```
+
+[컴포넌트의 이름]
+컴포넌트의 이름은 항상 대문자로 시작해야 한다.
+리액트에서 소문자로 시작하는 컴포넌트는 실제 DOM으로 인식하기 때문!
+
+```
+const element=<Welcome name="tester"/>;
+```
+
+[컴포넌트 렌더링]
+컴포넌트는 실제로 렌더링되는 것이 아님. props를 전달받은 컴포넌트가 엘리먼트를 만들어내고,
+그 엘리먼트가 렌더링 되는 것.
+
+```
+const element=<Welcome name="tester"/>;
+ReactDOM.render(element,document.getElementById('root'));
+```
+
+[컴포넌트 합성]
+여러개의 컴포넌트를 합쳐서 하나의 컴포넌트로 만드는 것
+리액트에서는 컴포넌트 안에 다른 컴포넌트를 넣을 수 있음.
+
+```
+function Welcome(props){
+    return <h1> hi, {props.name} </h1>;
+}
+
+function App(props){
+    return (
+        <div>
+            <Welcome name="tester1"/>;
+            <Welcome name="tester2"/>;
+            <Welcome name="tester3"/>;
+        </div>
+    )
+}
+
+```
+
+[컴포넌트 추출]
+하나의 큰 컴포넌트를 분해해서 여러개의 컴포넌트로 나누는 것 (컴포넌트 재사용성 증가)
+재사용 가능한 컴포넌트를 많이 갖고 있을수록 개발속도가 빨라진다.
+
+
+
