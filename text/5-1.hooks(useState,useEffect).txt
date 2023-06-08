@@ -1,0 +1,139 @@
+[hooks]
+
+    <함수형 컴포넌트>
+    1. state 사용 불가
+    2. 라이프 사이클에 따른 기능 구현 불가
+
+    <클래스형 컴포넌트>
+    1. 생성자에서 state 정의
+    2. setState()함수를 통해 state 업데이트
+    3. 라이프 사이클 메소드 제공
+
+hooks를 사용하면 클래스 컴포넌트에 있는 기능들을 함수형 컴포넌트에도 쓸 수 있다. 
+hooks는 전부 use로 시작함.
+
+[useState()]
+state를 사용하기 위한 hook.
+
+아래 코드는 클릭을 해도 count는 증가하지만, 렌더링되지 않는 예제이다.
+```
+import React, {useState}  from "react";
+
+function Counter(props){
+    var count=0;
+
+    return (
+        <div>
+            <p>총 {count} 번 클릭했습니다.</p>
+            <button onClick={()=>count++}>
+                클릭
+            </button>
+        </div>
+    );
+}
+```
+
+[useState() 사용법]
+
+const [변수명,set함수명] = useState(초기값);
+
+위 렌더링 되지 않는 예제를 고치면, 다음과 같다.
+state가 변경되면서 재 렌더링된다!!
+```
+import React, {useState}  from "react";
+
+function Counter(props){
+    const [count, setCount]=useState(0); //변수 각각에 대해 set함수가 따로 존재!
+
+    return (
+        <div>
+            <p>총 {count} 번 클릭했습니다.</p>
+            <button onClick={()=>setCount(count+1)}>
+                클릭
+            </button>
+        </div>
+    );
+}
+```
+[useEffect]
+리액트 함수 컴포넌트에서 side effect를 수행하기 위한 hook.
+
+    <side effect>
+    효과,영향의 의미와 비슷함. 서버에서 데이터를 받아오거나 수동으로 dom을 변경하는 작업들.
+    이러한 작업들을 side effect라고 부르는 이유는 다른 컴포넌트에 영향을 미칠 수 있으며, 렌더링 중에는 작업이 완료될 수 없기 때문. 
+    즉, 렌더링이 끝난 이후에 실행되야 함.
+
+useEffect를 사용하면 리액트 컴포넌트 생명주기를 다룰 수 있음.
+
+[useEffect()사용법]
+useEffect(이펙트 함수, 의존성 배열);
+
+의존성 배열 = 이 이펙트가 의존하는 배열, 배열 원소 중 하나라도 변경되면 이펙트 함수가 발동됨.
+
+    <이펙트 함수가 mount, unmount 시에 단 한번 씩 실행되게 하려면>
+    useEffect(이펙트 함수,[]);
+
+    <의존성 배열을 생략하면, 컴포넌트가 업데이트될 때마다 호출됨>
+    useEffect(이펙트 함수);
+
+```
+import React, {useState, useEffect}  from "react";
+
+function Counter(props){
+    const [count, setCount]=useState(0);
+
+    useEffect(()=>{//컴포넌트 업데이트될 때마다 호출됨.
+        document.title='you clicked ${count} times';
+    });
+
+    return (
+        <div>
+            <p>총 {count} 번 클릭했습니다.</p>
+            <button onClick={()=>setCount(count+1)}>
+                클릭
+            </button>
+        </div>
+    );
+}
+```
+
+<useEffect()의 return()의 역할>
+컴포넌트가 unmount되는 것과 동일. 즉, 컴포넌트가 unmount 될 때 호출된다.
+
+```
+import React, {useState, useEffect}  from "react";
+
+function UserStatus(props){
+    const [isOnline,setIsOnline]=useState(null);
+
+    function handleStatusChange(status){
+        setIsOnline(status.isOnline);
+    }
+
+    useEffect(()=>{
+        ServerAPI.subscribeUserStatus(props.user.id,handleStatusChange)
+        return ()=>{ // 컴포넌트가 unmount될 때 호출된다.
+            ServerAPI.unsubscribeUserStatus(props.user.id,handleStatusChange);
+        };
+    });
+
+    return isOnline? 'online':'offline';
+}
+```
+
+useEffect는 하나의 컴포넌트에 여러개 쓸 수 있다.
+
+[useEffect() 의 구조]
+
+useEffect(()=>{
+    //컴포넌트가 마운트된 이후,
+    //의존성 배열에 있는 변수들중 하나라도 값이 변경됬을 때 실행됨.
+    //의존성 배열에 빈 배열을 넣으면 마운트와 언마운트 시에 단 한 번 씩만 실행됨.
+    //의존성 배열 생략 시 컴포넌트 업데이트 시마다 실행됨.
+
+    return ()=>{
+        //컴포넌트가 마운트 해제되기 전에 실행되는 코드
+        ...
+    }
+}
+,[의존성 변수1,의존성 변수 2]);

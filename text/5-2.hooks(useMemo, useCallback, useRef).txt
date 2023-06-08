@@ -1,0 +1,73 @@
+[useMemo()]
+Memoized value를 리턴하는 hook
+
+    <Memoization>
+    비용이 많이 드는 함수를 계속 호출하지 않고, 결괏값을 저장해두고 호출되면 반환해주어서 성능을 높임.
+    여기서 결괏값을 Memoized value라고 한다.
+
+useMemo hook을 사용하면, 컴포넌트가 재 랜더링될 때마다 연산량이 높은 작업을 다시 실행시키는 것을 피할 수 있다.
+
+[useMemo() 사용법]
+
+```
+const memeoizedValue=useMemo(
+    ()=>{
+        //연산량이 높은 작업을 수행하여 결과를 반환
+        return computeExpensiveValue(의존성 변수1, 의존성 변수2);
+    },
+    [의존성 변수1, 의존성 변수2]
+);
+```
+
+useMemo()의 파라미터에 넣는 함수는 반드시 컴포넌트 랜더링에 사용되는 함수여야 한다. 그리고 의존성 배열을 넣어야만 useMemo()의 효과가 있다.
+그렇지 않고 의존성 배열을 넣지 않으면 매 랜더링마다 함수가 실행되기 때문에 Memoization하는 게 소용이 없어진다.
+
+의존성 배열이 빈 배열일 경우, 컴포넌트 마운트시에만 호출된다.
+
+[useCallback()]
+useMemo() hook과 유사하지만, 값이 아닌 함수를 반환.
+
+[useCallback() 사용법]
+```
+const memeoizedCallback=useCallback(
+    ()=>{
+        doSomething(의존성 변수1,의존성 변수2)
+    },
+    [의존성 변수1, 의존성 변수2]
+);
+```
+의존성 변수가 하나라도 변경되면, 메모이제이션된 콜백이 리턴됨.
+
+[useRef()]
+레퍼런스를 사용하기 위한 hook
+
+    <reference>
+    특정 컴포넌트에 접근할 수 있는 객체
+
+    <refObject.current>
+    current는 현재 참조하고 있는 엘리먼트
+
+[useRef() 사용법]
+const refContainer=useRef(초깃값); //useRef() 반환 값은 레퍼런스 객체, 초깃값은 current의 초깃값
+
+```
+function TextInputWithFocusButton(props){
+    const inputElem=useRef(null);
+
+    const onButtonClick= ()=>{
+        //`current`는 마운트된 input element를 가리킴
+        inputElem.current.focus();
+    };
+
+    return (
+        <>
+            <input ref={inputElem} type="text"/>
+            <button onClick={onButtonClick}>
+                focus the input
+            </button>
+        </>
+    );
+}
+```
+
+useRef()는 내부의 데이터가 변경되었을 때 별도로 알리지 않는다. 
