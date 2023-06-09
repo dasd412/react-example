@@ -1,0 +1,50 @@
+[리액트의 이벤트]
+
+```
+<button onClick={activate}>
+    Activate
+</button>
+```
+
+[이벤트 핸들러]
+이벤트가 발생하면 처리해주는 함수 (이벤트 리스너라고도 함.)
+
+함수 컴포넌트에서 이벤트 리스너를 등록하는 방법
+
+```
+function Toggle(props){
+    const [isToggleOn, setIsToggleOn]=useState(true);
+
+    //방법 1. 함수 안에 함수로 정의
+    function handleClick(){
+        setIsToggleOn((isToggleOn)=>!isToggleOn);
+    }
+
+    //방법 2. arrow function을 사용하여 정의
+    const handleClick=()=>{
+        setIsToggleOn((isToggleOn)=>!isToggleOn);
+    }
+
+    return (
+        <button onClick={handleClick}>
+            {isToggleOn ? "ON" : "OFF"}
+        </button>
+    );
+}
+```
+
+[이벤트 핸들러에 arguments(매개변수) 전달하기]
+
+```
+function MyButton(props){
+    const handleDelete = (id,event)=>{
+        console.log(id,event.target);
+    };
+
+    return (
+            <button onClick={(event)=>handleDelete(1,event)}>
+                Delete
+            </button>
+    );
+}
+```
