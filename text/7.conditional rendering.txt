@@ -1,0 +1,124 @@
+[조건부 렌더링]
+리액트에서 자주 쓰이는 기능이므로 잘 알아두자.
+조건문에 따라서 렌더링이 달라지는 것을 뜻한다.
+
+예제 코드
+```
+function UserGreeting(props){
+    return <h1> 환영합니다.</h1>;
+}
+
+function GuestGreeting(props){
+    return <h1> 회원 가입 해주세요</h1>;
+}
+
+function Greeting(props){
+    const isLoggedIn=props.isLoggedIn;
+
+    if(isLoggedIn){
+        return <UserGreeting/>;
+    }
+
+    return <GuestGreeting/>;
+} 
+```
+
+[자바스크립의 truthy와 falsy]
+truthy : true는 아니지만 true로 여겨지는 값
+falsy: false는 아니지만 false로 여겨지는 값
+
+[Element variables]
+엘리먼트를 변수처럼 다루는 기능.
+
+```
+function LoginButton(props){
+    return (
+        <button onClick={props.onClick}>
+            로그인
+        </button>
+    );
+}
+
+function LogoutButton(props){
+    return (
+            <button onClick={props.onClick}>
+                로그아웃
+            </button>
+    );
+}
+
+function LoginControl(props){
+    const [isLoggedIn,setIsLoggedIn]=useState(false);
+
+    const handleLoginClick=()=>{
+        setIsLoggedIn(true);
+    }
+
+    const handleLogoutClick=()=>{
+        setIsLoggedIn(false);
+    }
+
+    let button;
+
+    if(isLoggedIn){
+        button=<LogoutButton onClick={handleLogoutClick}/>;
+    }
+    else{
+        button=<LoginButton onClick={handleLoginClick}/>;
+    }
+
+    return (
+        <div>
+            <Greeting is isLoggedIn={isLoggedIn}/>
+            {button} //Element variables
+        </div>
+    );
+}
+```
+
+[Inline condition]
+조건문을 코드 안에 집어 넣는 것.
+
+    <Inline if> 
+    if 문의 경우 && 연산자 사용
+
+    true && expression -> expression 이 나옴.
+    false && expression -> false 나옴
+
+    아래 코드는 길이가 0 이상이면 h2 태그 엘리먼트가 렌더링되고, 그렇지 않으면 렌더링 되지 않는 코드이다.
+    ```
+    function Mailbox(props){
+        const unReadMessages=props.unReadMessages;
+
+        return (
+            <div>
+                <h1>hi!!</h1>
+                {unReadMessages.length >0 &&
+                    <h2>
+                        현재 {unReadMessages.length} 개의 읽지 않은 메시지가 있습니다.
+                    </h2>
+                }
+            </div>
+        );
+    }
+    ```
+
+    <Inline if-else>
+    if-else문의 경우 ? 연산자를 사용
+
+    condition ? true : false
+
+[컴포넌트 렌더링 막기]
+null을 리턴하면 렌더링 되지 않는다. (컴포넌트 생명주기랑 관련 없음.)
+
+```
+function WarningBanner(props){
+    if (!props.warning){//props.warning이 false면 이 컴포넌트는 렌더링되지 않는다.
+        return null; 
+    }
+
+    return (
+        <div>경고!</div>
+    );
+}
+```
